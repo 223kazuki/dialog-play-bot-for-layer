@@ -1,4 +1,4 @@
-(ns layer-dialog-play-client.component.token-manager
+(ns dialog-play-bot-for-layer.component.token-manager
   "Manage yepl access-token, dialog-play channel-id, layer conversation-id."
   (:require [integrant.core :as ig]
             [clojure.core.cache :as cache]))
@@ -25,14 +25,14 @@
     (let [conversation-cache (:conversation-cache this)]
       (cache/lookup @conversation-cache "yelp-access-token"))))
 
-(defmethod ig/init-key :layer-dialog-play-client.component/token-manager [_ opts]
+(defmethod ig/init-key :dialog-play-bot-for-layer.component/token-manager [_ opts]
   (assoc (map->TokenManager opts)
          :conversation-cache (atom (cache/ttl-cache-factory {} :ttl (* 10 60 1000)))
          :yelp-access-token-cache (atom (cache/ttl-cache-factory {} :ttl (* 10 60 1000)))))
 
-(defmethod ig/resume-key :layer-dialog-play-client.component/token-manager [_ opts _ _]
+(defmethod ig/resume-key :dialog-play-bot-for-layer.component/token-manager [_ opts _ _]
   (assoc (map->TokenManager opts)
          :conversation-cache (atom (cache/ttl-cache-factory {} :ttl (* 10 60 1000)))
          :yelp-access-token-cache (atom (cache/ttl-cache-factory {} :ttl (* 10 60 1000)))))
 
-(defmethod ig/halt-key! :layer-dialog-play-client.component/token-manager [_ opts])
+(defmethod ig/halt-key! :dialog-play-bot-for-layer.component/token-manager [_ opts])

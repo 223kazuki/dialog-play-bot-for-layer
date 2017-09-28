@@ -1,4 +1,4 @@
-(ns layer-dialog-play-client.boundary.dialog-play
+(ns dialog-play-bot-for-layer.boundary.dialog-play
   (:require [integrant.core :as ig]
             [environ.core :refer [env]]
             [clojure.data.json :as json]
@@ -30,6 +30,6 @@
              (map :content)
              (map :text))))))
 
-(defmethod ig/init-key :layer-dialog-play-client.boundary/dialog-play [_ opts]
+(defmethod ig/init-key :dialog-play-bot-for-layer.boundary/dialog-play [_ opts]
   (let [app-token (:dialog-play-app-token env)]
     (map->DialogPlay (assoc opts :app-token app-token))))

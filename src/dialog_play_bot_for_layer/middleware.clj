@@ -1,4 +1,4 @@
-(ns layer-dialog-play-client.middleware
+(ns dialog-play-bot-for-layer.middleware
   "Logging request as map."
   (:require [integrant.core :as ig]
             [clojure.pprint :refer [pprint]]))

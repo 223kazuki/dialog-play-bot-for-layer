@@ -1,6 +1,6 @@
-(ns layer-dialog-play-client.boundary.yelp-test
-  (:require [layer-dialog-play-client.boundary.yelp :refer :all]
-            [layer-dialog-play-client.component.token-manager :as token-manager]
+(ns dialog-play-bot-for-layer.boundary.yelp-test
+  (:require [dialog-play-bot-for-layer.boundary.yelp :refer :all]
+            [dialog-play-bot-for-layer.component.token-manager :as token-manager]
             [clojure.test :refer :all]
             [clojure.pprint :refer :all]
             [integrant.core :as ig]
@@ -11,7 +11,7 @@
 (def test-yelp (map->Yelp {:url "https://api.yelp.com"
                            :client-id "xxxxxxxxxxxxxxxxxxxxxx"
                            :client-secret "xxxxxxxxxxxxxxxxxxxxxx"
-                           :token-manager (layer-dialog-play-client.component.token-manager/map->TokenManager {})}))
+                           :token-manager (dialog-play-bot-for-layer.component.token-manager/map->TokenManager {})}))
 
 (deftest search-restaurants-test
   (testing "OK"

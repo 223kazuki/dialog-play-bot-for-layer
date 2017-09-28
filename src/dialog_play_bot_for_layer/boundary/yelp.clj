@@ -1,4 +1,4 @@
-(ns layer-dialog-play-client.boundary.yelp
+(ns dialog-play-bot-for-layer.boundary.yelp
   (:require [integrant.core :as ig]
             [environ.core :refer [env]]
             [clojure.data.json :as json]
@@ -43,7 +43,7 @@
             (json/read-str :key-fn keyword)
             :businesses)))))
 
-(defmethod ig/init-key :layer-dialog-play-client.boundary/yelp [_ {:keys [url] :as opts}]
+(defmethod ig/init-key :dialog-play-bot-for-layer.boundary/yelp [_ {:keys [url] :as opts}]
   (let [{:keys [yelp-client-id yelp-client-secret]} env]
     (map->Yelp {:url url
                 :client-id yelp-client-id

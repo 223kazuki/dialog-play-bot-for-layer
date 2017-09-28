@@ -1,4 +1,4 @@
-(defproject layer-dialog-play-client "0.1.0-SNAPSHOT"
+(defproject dialog-play-bot-for-layer "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
@@ -13,8 +13,8 @@
                  [org.clojure/core.cache "0.6.5"]
                  [clj-time "0.14.0"]]
   :plugins [[duct/lein-duct "0.10.2"]]
-  :main ^:skip-aot layer-dialog-play-client.main
-  :uberjar-name  "layer-dialog-play-client-standalone.jar"
+  :main ^:skip-aot dialog-play-bot-for-layer.main
+  :uberjar-name  "dialog-play-bot-for-layer-standalone.jar"
   :resource-paths ["resources" "target/resources"]
   :prep-tasks     ["javac" "compile" ["run" ":duct/compiler"]]
   :profiles

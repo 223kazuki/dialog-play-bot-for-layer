@@ -1,4 +1,4 @@
-# layer-dialog-play-client
+# dialog-play-bot-for-layer
 
 Client for Layer and Dialog Play.
 
@@ -30,7 +30,7 @@ heroku git:remote -a FIXME
 
 ```
 heroku login
-heroku create layer-dialog-play-client
+heroku create dialog-play-bot-for-layer
 
 heroku config:set DIALOG_PLAY_APP_TOKEN=*************
 heroku config:set LAYER_APP_ID=*************

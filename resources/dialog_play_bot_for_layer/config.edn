@@ -1,0 +1,33 @@
+{:duct.core/project-ns  dialog-play-bot-for-layer
+ :duct.core/environment :production
+
+ :duct.core/handler
+ {:middleware [#ig/ref :dialog-play-bot-for-layer.middleware/log-requests]}
+ :dialog-play-bot-for-layer.middleware/log-requests {}
+
+ :duct.module/logging {}
+ :duct.module.web/site {}
+
+ :duct.middleware.web/defaults {:security {:anti-forgery false}}
+
+ :duct.module/ataraxy
+ {[:get  "/webhook"] [:verify]
+  [:post "/webhook"] [:callback]}
+
+ :dialog-play-bot-for-layer.handler/verify
+ {}
+ :dialog-play-bot-for-layer.handler/callback
+ {:dialog-play #ig/ref :dialog-play-bot-for-layer.boundary/dialog-play
+  :layer #ig/ref :dialog-play-bot-for-layer.boundary/layer
+  :yelp #ig/ref :dialog-play-bot-for-layer.boundary/yelp
+  :token-manager #ig/ref :dialog-play-bot-for-layer.component/token-manager}
+
+ :dialog-play-bot-for-layer.boundary/dialog-play
+ {:url "https://management-api.dialogplay.jp"}
+ :dialog-play-bot-for-layer.boundary/layer
+ {:url "https://api.layer.com"}
+ :dialog-play-bot-for-layer.boundary/yelp
+ {:url "https://api.yelp.com"}
+ :dialog-play-bot-for-layer.component/token-manager
+ {}
+ }

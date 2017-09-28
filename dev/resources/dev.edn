@@ -1,2 +1,2 @@
 {:duct.core/environment :development
- :duct.core/include ["layer_dialog_play_client/config"]}
+ :duct.core/include ["dialog_play_bot_for_layer/config"]}

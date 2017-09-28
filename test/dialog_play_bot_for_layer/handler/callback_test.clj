@@ -1,7 +1,7 @@
-(ns layer-dialog-play-client.handler.callback-test
-  (:require [layer-dialog-play-client.handler.callback :refer :all]
-            [layer-dialog-play-client.boundary.dialog-play :refer [IDialogPlay]]
-            [layer-dialog-play-client.boundary.layer :refer [ILayer]]
+(ns dialog-play-bot-for-layer.handler.callback-test
+  (:require [dialog-play-bot-for-layer.handler.callback :refer :all]
+            [dialog-play-bot-for-layer.boundary.dialog-play :refer [IDialogPlay]]
+            [dialog-play-bot-for-layer.boundary.layer :refer [ILayer]]
             [clojure.test :refer :all]
             [clojure.pprint :refer :all]
             [integrant.core :as ig]
@@ -9,8 +9,8 @@
             [clojure.data.json :as json]
             [clojure.java.io :as io]
             [shrubbery.core :refer :all]
-            [layer-dialog-play-client.boundary.layer :as layer]
-            [layer-dialog-play-client.boundary.dialog-play :as dialog-play]))
+            [dialog-play-bot-for-layer.boundary.layer :as layer]
+            [dialog-play-bot-for-layer.boundary.dialog-play :as dialog-play]))
 
 (defn dialog-play-stub [opts]
   (mock IDialogPlay
@@ -37,16 +37,16 @@
                  :bot-user-id layer-bot-user-id})))
 
 (def config
-  {:layer-dialog-play-client.handler/callback
+  {:dialog-play-bot-for-layer.handler/callback
    {:dialog-play (ig/ref ::dialog-play)
     :layer (ig/ref ::layer)
-    :token-manager (ig/ref :layer-dialog-play-client.component/token-manager)
+    :token-manager (ig/ref :dialog-play-bot-for-layer.component/token-manager)
     :sync true}
    ::dialog-play
    {:url "https"}
    ::layer
    {:url "https"}
-   :layer-dialog-play-client.component/token-manager
+   :dialog-play-bot-for-layer.component/token-manager
    {}})
 
 (defn create-system [] (ig/init config))
@@ -88,9 +88,9 @@
   }" :key-fn keyword))
 
 (deftest callback
-  (let [{:keys [layer-dialog-play-client.handler/callback
-                layer-dialog-play-client.handler.callback-test/layer
-                layer-dialog-play-client.handler.callback-test/dialog-play]} (create-system)]
+  (let [{:keys [dialog-play-bot-for-layer.handler/callback
+                dialog-play-bot-for-layer.handler.callback-test/layer
+                dialog-play-bot-for-layer.handler.callback-test/dialog-play]} (create-system)]
     (testing "OK"
       (let [[status body]
             (callback

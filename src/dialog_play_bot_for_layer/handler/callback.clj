@@ -1,14 +1,14 @@
-(ns layer-dialog-play-client.handler.callback
+(ns dialog-play-bot-for-layer.handler.callback
   (:require [ataraxy.core :as ataraxy]
             [ataraxy.response :as response]
             [integrant.core :as ig]
             [clojure.data.json :as json]
             [clj-http.client :as client]
             [clojure.string :as str]
-            [layer-dialog-play-client.boundary.layer :as layer]
-            [layer-dialog-play-client.boundary.dialog-play :as dialog-play]
-            [layer-dialog-play-client.boundary.yelp :as yelp]
-            [layer-dialog-play-client.component.token-manager :as token-manager]
+            [dialog-play-bot-for-layer.boundary.layer :as layer]
+            [dialog-play-bot-for-layer.boundary.dialog-play :as dialog-play]
+            [dialog-play-bot-for-layer.boundary.yelp :as yelp]
+            [dialog-play-bot-for-layer.component.token-manager :as token-manager]
             [clj-time.format :as f]
             [clj-time.coerce :as c]))
 
@@ -62,7 +62,7 @@
                                                                    :body message})]
              "OK")))))))
 
-(defmethod ig/init-key :layer-dialog-play-client.handler/callback [_ {:keys [dialog-play layer token-manager sync] :as opts}]
+(defmethod ig/init-key :dialog-play-bot-for-layer.handler/callback [_ {:keys [dialog-play layer token-manager sync] :as opts}]
   (fn [{[] :ataraxy/result :as req}]
     (let [{:keys [body params]} req]
       (when body
