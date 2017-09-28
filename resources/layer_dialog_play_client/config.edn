@@ -1,0 +1,33 @@
+{:duct.core/project-ns  layer-dialog-play-client
+ :duct.core/environment :production
+
+ :duct.core/handler
+ {:middleware [#ig/ref :layer-dialog-play-client.middleware/log-requests]}
+ :layer-dialog-play-client.middleware/log-requests {}
+
+ :duct.module/logging {}
+ :duct.module.web/site {}
+
+ :duct.middleware.web/defaults {:security {:anti-forgery false}}
+
+ :duct.module/ataraxy
+ {[:get  "/webhook"] [:verify]
+  [:post "/webhook"] [:callback]}
+
+ :layer-dialog-play-client.handler/verify
+ {}
+ :layer-dialog-play-client.handler/callback
+ {:dialog-play #ig/ref :layer-dialog-play-client.boundary/dialog-play
+  :layer #ig/ref :layer-dialog-play-client.boundary/layer
+  :yelp #ig/ref :layer-dialog-play-client.boundary/yelp
+  :token-manager #ig/ref :layer-dialog-play-client.component/token-manager}
+
+ :layer-dialog-play-client.boundary/dialog-play
+ {:url "https://management-api.dialogplay.jp"}
+ :layer-dialog-play-client.boundary/layer
+ {:url "https://api.layer.com"}
+ :layer-dialog-play-client.boundary/yelp
+ {:url "https://api.yelp.com"}
+ :layer-dialog-play-client.component/token-manager
+ {}
+ }
