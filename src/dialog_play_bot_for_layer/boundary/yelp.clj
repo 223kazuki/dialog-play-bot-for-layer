@@ -10,12 +10,12 @@
   (let [{:keys [coordinates phone is_closed name image_url categories id
                 url distance transactions display_phone location price
                 review_count rating]} business]
-    (json/write-str {:name name
+    (json/write-str {:title name
                      :image_url image_url
-                     :url url
-                     :price price
-                     :review_count review_count
-                     :rating rating})))
+                     :link url
+                     :detail (str "Price: " price "\n"
+                                  "Reviews: " review_count "\n"
+                                  "Rating: " rating)})))
 
 (defprotocol IYelp
   (get-access-token [this])

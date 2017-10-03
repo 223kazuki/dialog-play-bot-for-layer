@@ -37,8 +37,11 @@
                         (shuffle)
                         (take 5)
                         (map #(yelp/parse-business yelp %)))]
-    (layer/post-message layer conversation-id {:mime_type "custom/restaurants"
-                                               :body (json/write-str businesses)}))
+    (layer/post-message layer conversation-id {:mime_type "application/x.card.carousel+json"
+                                               :body {:title ""
+                                                      :subtitle ""
+                                                      :selection_mode "none"
+                                                      :item (json/write-str businesses)}}))
   "OK")
 (defmethod custome-behavier :default [params opts] "OK")
 
@@ -67,21 +70,21 @@
 (defmethod handle-webhook "Message.created" [req {:keys [dialog-play layer token-manager sync] :as opts}]
   (let [{:keys [body params]} req]
     (when body
-      (let [body (-> body slurp (json/read-str :key-fn keyword))
+      (let [body (some-> body slurp (json/read-str :key-fn keyword))
             _ (println "body: " body)
-            part (-> body
-                     (get-in [:message :parts])
-                     first)
+            part (some-> body
+                         (get-in [:message :parts])
+                         first)
             mime-type (:mime_type part)
             message (:body part)
-            conversation-id (-> body
-                                (get-in [:message :conversation :id])
-                                (str/split #"/")
-                                last)
-            sender-id (-> body
-                          (get-in [:message :sender :id])
-                          (str/split #"/")
-                          last)]
+            conversation-id (some-> body
+                                    (get-in [:message :conversation :id])
+                                    (str/split #"/")
+                                    last)
+            sender-id (some-> body
+                              (get-in [:message :sender :id])
+                              (str/split #"/")
+                              last)]
         (println "Message created: " conversation-id sender-id message mime-type)
         (when (not= sender-id (layer/get-bot-user-id layer))
           (if sync
@@ -91,12 +94,12 @@
 (defmethod handle-webhook "Conversation.created" [req {:keys [dialog-play layer token-manager sync] :as opts}]
   (let [{:keys [body params]} req]
     (when body
-      (let [body (-> body slurp (json/read-str :key-fn keyword))
+      (let [body (some-> body slurp (json/read-str :key-fn keyword))
             _ (println "body: " body)
-            conversation-id (-> body
-                                (get-in [:conversation :id])
-                                (str/split #"/")
-                                last)]
+            conversation-id (some-> body
+                                    (get-in [:conversation :id])
+                                    (str/split #"/")
+                                    last)]
         (println "Conversation created: " conversation-id)
         (when-let [welcome-message (:welcome-message env)]
           (letfn [(f [] (layer/post-message layer conversation-id
