@@ -94,7 +94,7 @@
       (let [body (-> body slurp (json/read-str :key-fn keyword))
             _ (println "body: " body)
             conversation-id (-> body
-                                (get-in [:message :conversation :id])
+                                (get-in [:conversation :id])
                                 (str/split #"/")
                                 last)]
         (println "Conversation created: " conversation-id)
