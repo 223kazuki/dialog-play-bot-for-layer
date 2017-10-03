@@ -62,27 +62,31 @@
                                                                    :body message})]
              "OK")))))))
 
-(defmethod ig/init-key :dialog-play-bot-for-layer.handler/callback [_ {:keys [dialog-play layer token-manager sync] :as opts}]
+(defmulti  handle-webhook #(get-in % [:headers "layer-webhook-event-type"]))
+(defmethod handle-webhook "Message.created" [req {:keys [dialog-play layer token-manager sync] :as opts}]
+  (let [{:keys [body params]} req]
+    (when body
+      (let [body (-> body slurp (json/read-str :key-fn keyword))
+            part (-> body
+                     (get-in [:message :parts])
+                     first)
+            mime-type (:mime_type part)
+            message (:body part)
+            conversation-id (-> body
+                                (get-in [:message :conversation :id])
+                                (str/split #"/")
+                                last)
+            sender-id (-> body
+                          (get-in [:message :sender :id])
+                          (str/split #"/")
+                          last)]
+        (when (not= sender-id (layer/get-bot-user-id layer))
+          (if sync
+            (dialog-play-to-layer opts conversation-id message)
+            (letfn [(f [] (dialog-play-to-layer opts conversation-id message))]
+              (.start (Thread. f)))))))))
+
+(defmethod ig/init-key :dialog-play-bot-for-layer.handler/callback [_ opts]
   (fn [{[] :ataraxy/result :as req}]
-    (let [{:keys [body params]} req]
-      (when body
-        (let [body (-> body slurp (json/read-str :key-fn keyword))
-              part (-> body
-                       (get-in [:message :parts])
-                       first)
-              mime-type (:mime_type part)
-              message (:body part)
-              conversation-id (-> body
-                                  (get-in [:message :conversation :id])
-                                  (str/split #"/")
-                                  last)
-              sender-id (-> body
-                            (get-in [:message :sender :id])
-                            (str/split #"/")
-                            last)]
-          (when (not= sender-id (layer/get-bot-user-id layer))
-            (if sync
-              (dialog-play-to-layer opts conversation-id message)
-              (letfn [(f [] (dialog-play-to-layer opts conversation-id message))]
-                (.start (Thread. f)))))))
-      [::response/ok "OK"])))
+    (handle-webhook req opts)
+    [::response/ok "OK"]))
