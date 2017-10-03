@@ -62,7 +62,7 @@
                                                                    :body message})]
              "OK")))))))
 
-(defmulti  handle-webhook #(get-in %1 [:headers "layer-webhook-event-type"]))
+(defmulti  handle-webhook (fn [req opts] (get-in req [:headers "layer-webhook-event-type"])))
 (defmethod handle-webhook "Message.created" [req {:keys [dialog-play layer token-manager sync] :as opts}]
   (let [{:keys [body params]} req]
     (when body
