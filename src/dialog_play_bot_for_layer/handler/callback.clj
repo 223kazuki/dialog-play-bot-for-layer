@@ -62,7 +62,7 @@
                                                                    :body message})]
              "OK")))))))
 
-(defmulti  handle-webhook #(get-in % [:headers "layer-webhook-event-type"]))
+(defmulti  handle-webhook #(get-in %1 [:headers "layer-webhook-event-type"]))
 (defmethod handle-webhook "Message.created" [req {:keys [dialog-play layer token-manager sync] :as opts}]
   (let [{:keys [body params]} req]
     (when body
@@ -85,6 +85,10 @@
             (dialog-play-to-layer opts conversation-id message)
             (letfn [(f [] (dialog-play-to-layer opts conversation-id message))]
               (.start (Thread. f)))))))))
+(defmethod handle-webhook "Channel.created" [req {:keys [dialog-play layer token-manager sync] :as opts}]
+  (letfn [(f [] )]
+    (.start (Thread. f))))
+(defmethod handle-webhook :default [req opts])
 
 (defmethod ig/init-key :dialog-play-bot-for-layer.handler/callback [_ opts]
   (fn [{[] :ataraxy/result :as req}]
