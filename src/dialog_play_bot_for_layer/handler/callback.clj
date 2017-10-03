@@ -68,6 +68,7 @@
   (let [{:keys [body params]} req]
     (when body
       (let [body (-> body slurp (json/read-str :key-fn keyword))
+            _ (println "body: " body)
             part (-> body
                      (get-in [:message :parts])
                      first)
@@ -81,7 +82,6 @@
                           (get-in [:message :sender :id])
                           (str/split #"/")
                           last)]
-        (println "body: " body)
         (println "Message created: " conversation-id sender-id message mime-type)
         (when (not= sender-id (layer/get-bot-user-id layer))
           (if sync
@@ -92,11 +92,11 @@
   (let [{:keys [body params]} req]
     (when body
       (let [body (-> body slurp (json/read-str :key-fn keyword))
+            _ (println "body: " body)
             conversation-id (-> body
                                 (get-in [:message :conversation :id])
                                 (str/split #"/")
                                 last)]
-        (println "body: " body)
         (println "Conversation created: " conversation-id)
         (when-let [welcome-message (:welcome-message env)]
           (letfn [(f [] (layer/post-message layer conversation-id
