@@ -10,7 +10,8 @@
             [dialog-play-bot-for-layer.boundary.yelp :as yelp]
             [dialog-play-bot-for-layer.component.token-manager :as token-manager]
             [clj-time.format :as f]
-            [clj-time.coerce :as c]))
+            [clj-time.coerce :as c]
+            [environ.core :refer [env]]))
 
 (def DATE_FORMATTER (f/formatter "yyyy/MM/dd HH:mm:ss"))
 (def CUSTOM_RESPONSE_PREFIX "CUSTOM_RESPONSE: ")
@@ -85,9 +86,19 @@
             (dialog-play-to-layer opts conversation-id message)
             (letfn [(f [] (dialog-play-to-layer opts conversation-id message))]
               (.start (Thread. f)))))))))
-(defmethod handle-webhook "Channel.created" [req {:keys [dialog-play layer token-manager sync] :as opts}]
-  (letfn [(f [] )]
-    (.start (Thread. f))))
+(defmethod handle-webhook "Conversation.created" [req {:keys [dialog-play layer token-manager sync] :as opts}]
+  (let [{:keys [body params]} req]
+    (when body
+      (let [body (-> body slurp (json/read-str :key-fn keyword))
+            conversation-id (-> body
+                                (get-in [:message :conversation :id])
+                                (str/split #"/")
+                                last)]
+        (println "Conversation created: " conversation-id)
+        (when-let [welcome-message (:welcome-message env)]
+          (letfn [(f [] (layer/post-message layer conversation-id
+                                            {:body welcome-message}))]
+            (.start (Thread. f))))))))
 (defmethod handle-webhook :default [req opts])
 
 (defmethod ig/init-key :dialog-play-bot-for-layer.handler/callback [_ opts]
