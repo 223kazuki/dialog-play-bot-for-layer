@@ -81,6 +81,8 @@
                           (get-in [:message :sender :id])
                           (str/split #"/")
                           last)]
+        (println "body: " body)
+        (println "Message created: " conversation-id sender-id message mime-type)
         (when (not= sender-id (layer/get-bot-user-id layer))
           (if sync
             (dialog-play-to-layer opts conversation-id message)
@@ -94,6 +96,7 @@
                                 (get-in [:message :conversation :id])
                                 (str/split #"/")
                                 last)]
+        (println "body: " body)
         (println "Conversation created: " conversation-id)
         (when-let [welcome-message (:welcome-message env)]
           (letfn [(f [] (layer/post-message layer conversation-id
