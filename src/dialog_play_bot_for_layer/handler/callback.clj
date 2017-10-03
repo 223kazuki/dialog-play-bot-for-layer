@@ -35,7 +35,7 @@
                                                     :term keyword})
         businesses (->> result
                         (shuffle)
-                        (take 5)
+                        (take 2)
                         (map #(yelp/parse-business yelp %)))]
     (layer/post-message layer conversation-id {:mime_type "application/x.card.carousel+json"
                                                :body (json/write-str
