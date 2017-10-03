@@ -38,10 +38,11 @@
                         (take 5)
                         (map #(yelp/parse-business yelp %)))]
     (layer/post-message layer conversation-id {:mime_type "application/x.card.carousel+json"
-                                               :body {:title ""
-                                                      :subtitle ""
-                                                      :selection_mode "none"
-                                                      :item (json/write-str businesses)}}))
+                                               :body (json/write-str
+                                                      {:title ""
+                                                       :subtitle ""
+                                                       :selection_mode "none"
+                                                       :item businesses})}))
   "OK")
 (defmethod custome-behavier :default [params opts] "OK")
 
