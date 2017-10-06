@@ -3,7 +3,6 @@
   "description": "Dialog Play (https://dialogplay.jp/) chatbot client for Layer (https://layer.com)",
   "keywords": [],
   "repository": "https://github.com/223kazuki/dialog-play-bot-for-layer",
-  "logo": "",
   "env": {
     "DIALOG_PLAY_APP_TOKEN": {
       "description": "DIALOG_PLAY_APP_TOKEN",
