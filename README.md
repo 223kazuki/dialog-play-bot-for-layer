@@ -1,6 +1,6 @@
 # dialog-play-bot-for-layer
 
-Client for Layer and Dialog Play.
+Chatbot client of Dialog Play on Layer.
 
 * https://layer.com/
 * https://www.dialogplay.jp/
@@ -80,15 +80,41 @@ But you can also run tests through Leiningen.
 lein test
 ```
 
-### Heroku Deploy
+## Deploy
+
+### 1. Create accounts
+
+### 1-1. Dialog Play
+Create a DialogPlay account and deploy a web application.
+
+* get APP_TOKEN
+
+### 1-2. Layer
+Create Layer account and create an application.
+Then create a chatbot user.
+
+* get APP_ID
+* get API_TOKEN
+* get BOT_USER_ID
+
+### 1-3. [Optional] Yelp developer
+Create a yelp developer account.
+
+* get CLIENT_ID
+* get CLIENT_SECRET
+
+### 2. Deploy to heroku
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 or
 
 ```
+git clone https://github.com/223kazuki/dialog-play-bot-for-layer
+cd dialog-play-bot-for-layer
+
 heroku login
-heroku create dialog-play-bot-[SUFIX]
+heroku create [heroku-app-name]
 
 heroku config:set DIALOG_PLAY_APP_TOKEN=*************
 heroku config:set LAYER_APP_ID=*************
@@ -100,6 +126,18 @@ heroku config:set YELP_CLIENT_SECRET=*************
 git push heroku master
 heroku logs -t
 ```
+
+### 3. Add webhook
+
+Add a following webhook on Layer dashboard.
+
+* URL endpoint
+    * https://[heroku-app-name].herokuapp.com/webhook
+* events
+    * Message.created
+    * Conversation.created
+
+and activate it.
 
 ## Legal
 
