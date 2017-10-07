@@ -1,0 +1,33 @@
+{
+  "name": "dialog-play-bot-for-layer",
+  "description": "Dialog Play (https://dialogplay.jp/) chatbot client for Layer (https://layer.com)",
+  "keywords": [],
+  "repository": "https://github.com/223kazuki/dialog-play-bot-for-layer",
+  "env": {
+    "DIALOG_PLAY_APP_TOKEN": {
+      "description": "DIALOG_PLAY_APP_TOKEN",
+      "value": ""
+    },
+    "LAYER_APP_ID": {
+      "description": "LAYER_APP_ID",
+      "value": ""
+    },
+    "LAYER_API_TOKEN": {
+      "description": "LAYER_API_TOKEN",
+      "value": ""
+    },
+    "LAYER_BOT_USER_ID": {
+      "description": "LAYER_BOT_USER_ID",
+      "value": ""
+    },
+    "YELP_CLIENT_ID": {
+      "description": "YELP_CLIENT_ID",
+      "value": ""
+    },
+    "YELP_CLIENT_SECRET": {
+      "description": "YELP_CLIENT_SECRET",
+      "value": ""
+    }
+  },
+  "addons": []
+}
