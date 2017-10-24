@@ -44,6 +44,9 @@
                                                        :selection_mode "none"
                                                        :items businesses})}))
   "OK")
+(defmethod custome-behavier "airline/search" [params {:keys [layer yelp token-manager
+                                                             conversation-id] :as opts}]
+  (println "!!!!!!!" params))
 (defmethod custome-behavier :default [params opts] "OK")
 
 (defn dialog-play-to-layer
