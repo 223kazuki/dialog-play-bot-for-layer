@@ -94,7 +94,8 @@
     (testing "OK"
       (let [[status body]
             (callback
-             {:body (io/input-stream
+             {:headers {"layer-webhook-event-type" "Message.created"}
+              :body (io/input-stream
                      (.getBytes (json/write-str mock-request-body)))})]
         (is (received? dialog-play dialog-play/create-channel))
         (is (received? dialog-play dialog-play/post-message))
