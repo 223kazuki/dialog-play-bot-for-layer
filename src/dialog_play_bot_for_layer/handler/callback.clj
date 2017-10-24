@@ -46,7 +46,29 @@
   "OK")
 (defmethod custome-behavier "airline/search" [params {:keys [layer yelp token-manager
                                                              conversation-id] :as opts}]
-  (println "!!!!!!!" params))
+  (let [{:keys [international numberPeople airportDepart airportArrival dateDepart dateReturn]} params
+        _ (println params) ;; log
+        flights [{:id "9b8810c8-18e8-4c8f-99ce-2a96915a21ab"
+                  :selectable true
+                  :date "12/30(月)"
+                  :routes [{:seats "○"
+                            :flightName "TL002"
+                            :depart {:airport "HND"
+                                     :airportJapanese "羽田"
+                                     :dateTime "19:45"}
+                            :arrival {:airport "SFO"
+                                      :airportJapanese "サンフランシスコ"
+                                      :dateTime "12:00"}}]
+                  :price "￥98000"
+                  :time "9時間 15分"
+                  :milage "1539マイル"}]]
+    (layer/post-message layer conversation-id {:mime_type "application/x.card.flight.ticket.list+json"
+                                               :body (json/write-str
+                                                      {:title ""
+                                                       :subtitle ""
+                                                       :selection_mode "none"
+                                                       :items flights})})
+    "OK"))
 (defmethod custome-behavier :default [params opts] "OK")
 
 (defn dialog-play-to-layer
