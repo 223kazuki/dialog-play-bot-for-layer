@@ -122,6 +122,19 @@
                                                        :selection_mode "none"
                                                        :order order})})
     "OK"))
+(defmethod custome-behavier "airline/pdf" [params {:keys [layer yelp token-manager
+                                                          conversation-id] :as opts}]
+  (let [{:keys [file name]} params
+        _ (println params) ;; log
+        doc {:file file
+             :name name}]
+    (layer/post-message layer conversation-id {:mime_type "application/x.card.pdf+json"
+                                               :body (json/write-str
+                                                      {:title ""
+                                                       :subtitle ""
+                                                       :selection_mode "none"
+                                                       :doc doc})})
+    "OK"))
 (defmethod custome-behavier :default [params opts] "OK")
 
 (defn dialog-play-to-layer
@@ -142,7 +155,7 @@
                                                           (json/read-str m :key-fn keyword)
                                                           (:seats m)
                                                           (map :name m)
-                                                          (str/join m))
+                                                          (str/join m ","))
                   "application/x.card.flight.ticket.purchase+json" ""
                   message)
         _ (println message)
