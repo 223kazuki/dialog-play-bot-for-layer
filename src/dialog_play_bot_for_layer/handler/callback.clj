@@ -105,32 +105,22 @@
                                                              conversation-id] :as opts}]
   (let [{:keys [international numberPeople airportDepart airportArrival dateDepart dateReturn]} params
         _ (println params) ;; log
-        ]
+        flights (->> EXAMPLE_FLIGHTS
+                     (map #(assoc % :date dateDepart)))]
     (layer/post-message layer conversation-id {:mime_type "application/x.card.flight.ticket.list+json"
                                                :body (json/write-str
                                                       {:title ""
                                                        :subtitle ""
                                                        :selection_mode "none"
-                                                       :items EXAMPLE_FLIGHTS})})
+                                                       :items flights})})
     "OK"))
 (defmethod custome-behavier "airline/confirm" [params {:keys [layer yelp token-manager
                                                               conversation-id] :as opts}]
-  (let [{:keys [flight-id]} params
+  (let [{:keys [flight-id dateDepart]} params
         _ (println params) ;; log
-        flights [{:id "9b8810c8-18e8-4c8f-99ce-2a96915a21ab"
-                  :selectable false
-                  :date "12/30(月)"
-                  :routes [{:seats "○"
-                            :flightName "TL002"
-                            :depart {:airport "HND"
-                                     :airportJapanese "羽田"
-                                     :dateTime "19:45"}
-                            :arrival {:airport "SFO"
-                                      :airportJapanese "サンフランシスコ"
-                                      :dateTime "12:00"}}]
-                  :price "￥98000"
-                  :time "9時間 15分"
-                  :milage "1539マイル"}]]
+        flights (->> EXAMPLE_FLIGHTS
+                     (filter #(= (:id %) flight-id))
+                     (map #(assoc % :date dateDepart)))]
     (layer/post-message layer conversation-id {:mime_type "application/x.card.flight.ticket.list+json"
                                                :body (json/write-str
                                                       {:title ""
