@@ -197,7 +197,7 @@
                                                           (:seats m)
                                                           (map :name m)
                                                           (str/join "," m))
-                  "application/x.card.flight.ticket.purchase+json" "DONE"
+                  "application/x.card.flight.ticket.purchase+json" "購入完了"
                   message)
         _ (println message)
         dialog-play-messages (dialog-play/post-message dialog-play message channel-uuid)]
