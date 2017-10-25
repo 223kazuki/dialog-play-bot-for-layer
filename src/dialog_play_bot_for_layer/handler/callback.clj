@@ -17,6 +17,63 @@
 (def CUSTOM_RESPONSE_PREFIX "CUSTOM_RESPONSE: ")
 (def CUSTOM_RESPONSE_PREFIX_REGEX (re-pattern CUSTOM_RESPONSE_PREFIX))
 
+(def EXAMPLE_FLIGHTS
+  [{:id "9b8810c8-18e8-4c8f-99ce-2a96915a21ab"
+    :selectable true
+    :date "12/28(木)"
+    :routes
+    [{:seats "○"
+      :flightName "TL002"
+      :depart {:airport "HND", :airportJapanese "羽田", :dateTime "19:45"}
+      :arrival
+      {:airport "SFO", :airportJapanese "サンフランシスコ", :dateTime "12:00"}}]
+    :price "￥156,000"
+    :tax "￥17,320"
+    :time "9時間 15分"
+    :milage "5130マイル"}
+   {:id "90ddd38a-0ab1-4e44-bcbf-699fc51d7381"
+    :selectable true
+    :date "12/28(木)"
+    :routes
+    [{:seats "△"
+      :flightName "TL012"
+      :depart {:airport "NRT", :airportJapanese "成田", :dateTime "11:50"}
+      :arrival
+      {:airport "DFW"
+       :airportJapanese "ダラス・フォートワース"
+       :dateTime "08:05"}}
+     {:seats "7"
+      :flightName "TL7577"
+      :depart
+      {:airport "DFW"
+       :airportJapanese "ダラス・フォートワース"
+       :dateTime "11:10"}
+      :arrival
+      {:airport "SFO", :airportJapanese "サンフランシスコ", :dateTime "13:14"}}]
+    :price "￥166,500"
+    :tax "￥17,320"
+    :time "18時間 24分"
+    :milage "7904マイル"}
+   {:id "9f06f070-d434-4a20-bfec-05a71902ad4f"
+    :selectable true
+    :date "12/28(木)"
+    :routes
+    [{:seats "7"
+      :flightName "TL7016"
+      :depart {:airport "NRT", :airportJapanese "成田", :dateTime "18:45"}
+      :arrival
+      {:airport "LAX", :airportJapanese "ロサンゼルス", :dateTime "11:45"}}
+     {:seats "7"
+      :flightName "TL7556"
+      :depart
+      {:airport "LAX", :airportJapanese "ロサンゼルス", :dateTime "14:00"}
+      :arrival
+      {:airport "SFO", :airportJapanese "サンフランシスコ", :dateTime "15:30"}}]
+    :price "￥199,000"
+    :tax "￥17,320"
+    :time "13時間 45分"
+    :milage "5797マイル"}])
+
 ;; Custom handler for dialog play response.
 (defmulti custome-behavier :type)
 (defmethod custome-behavier "restaurants/search" [params {:keys [layer yelp token-manager
@@ -48,48 +105,13 @@
                                                              conversation-id] :as opts}]
   (let [{:keys [international numberPeople airportDepart airportArrival dateDepart dateReturn]} params
         _ (println params) ;; log
-        flights [{:id "9b8810c8-18e8-4c8f-99ce-2a96915a21ab"
-                  :selectable true
-                  :date "12/30(月)"
-                  :routes [{:seats "○"
-                            :flightName "TL002"
-                            :depart {:airport "HND"
-                                     :airportJapanese "羽田"
-                                     :dateTime "19:45"}
-                            :arrival {:airport "SFO"
-                                      :airportJapanese "サンフランシスコ"
-                                      :dateTime "12:00"}}]
-                  :price "￥98000"
-                  :time "9時間 15分"
-                  :milage "1539マイル"}
-                 {:id "90ddd38a-0ab1-4e44-bcbf-699fc51d7381"
-                  :selectable true
-                  :date "12/30(月)"
-                  :routes [{:seats "△"
-                            :flightName "TL012"
-                            :depart {:airport "NRT"
-                                     :airportJapanese "成田"
-                                     :dateTime "11:50"}
-                            :arrival {:airport "DFW"
-                                      :airportJapanese "ダラス・フォートワース"
-                                      :dateTime "08:05"}}
-                           {:seats "7"
-                            :flightName "TL7577"
-                            :depart {:airport "DFW"
-                                     :airportJapanese "ダラス・フォートワース"
-                                     :dateTime "11:01"}
-                            :arrival {:airport "SFO"
-                                      :airportJapanese "サンフランシスコ"
-                                      :dateTime "13:05"}}]
-                  :price "￥98,000"
-                  :time "18時間 15分"
-                  :milage "2371マイル"}]]
+        ]
     (layer/post-message layer conversation-id {:mime_type "application/x.card.flight.ticket.list+json"
                                                :body (json/write-str
                                                       {:title ""
                                                        :subtitle ""
                                                        :selection_mode "none"
-                                                       :items flights})})
+                                                       :items EXAMPLE_FLIGHTS})})
     "OK"))
 (defmethod custome-behavier "airline/confirm" [params {:keys [layer yelp token-manager
                                                               conversation-id] :as opts}]
