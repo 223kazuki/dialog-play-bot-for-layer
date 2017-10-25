@@ -124,10 +124,10 @@
     "OK"))
 (defmethod custome-behavier "airline/pdf" [params {:keys [layer yelp token-manager
                                                           conversation-id] :as opts}]
-  (let [{:keys [file name]} params
+  (let [{:keys [file title]} params
         _ (println params) ;; log
         doc {:file file
-             :name name}]
+             :title title}]
     (layer/post-message layer conversation-id {:mime_type "application/x.card.pdf+json"
                                                :body (json/write-str
                                                       {:title ""
