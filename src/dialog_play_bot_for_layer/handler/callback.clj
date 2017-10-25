@@ -61,7 +61,29 @@
                                       :dateTime "12:00"}}]
                   :price "￥98000"
                   :time "9時間 15分"
-                  :milage "1539マイル"}]]
+                  :milage "1539マイル"}
+                 {:id "90ddd38a-0ab1-4e44-bcbf-699fc51d7381"
+                  :selectable true
+                  :date "12/30(月)"
+                  :routes [{:seats "△"
+                            :flightName "TL012"
+                            :depart {:airport "NRT"
+                                     :airportJapanese "成田"
+                                     :dateTime "11:50"}
+                            :arrival {:airport "DFW"
+                                      :airportJapanese "ダラス・フォートワース"
+                                      :dateTime "08:05"}}
+                           {:seats "7"
+                            :flightName "TL7577"
+                            :depart {:airport "DFW"
+                                     :airportJapanese "ダラス・フォートワース"
+                                     :dateTime "11:01"}
+                            :arrival {:airport "SFO"
+                                      :airportJapanese "サンフランシスコ"
+                                      :dateTime "13:05"}}]
+                  :price "￥98,000"
+                  :time "18時間 15分"
+                  :milage "2371マイル"}]]
     (layer/post-message layer conversation-id {:mime_type "application/x.card.flight.ticket.list+json"
                                                :body (json/write-str
                                                       {:title ""
