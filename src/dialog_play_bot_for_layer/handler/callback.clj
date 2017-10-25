@@ -29,6 +29,7 @@
       {:airport "SFO", :airportJapanese "サンフランシスコ", :dateTime "12:00"}}]
     :price "￥156,000"
     :tax "￥17,320"
+    :amount "￥173,320"
     :time "9時間 15分"
     :milage "5130マイル"}
    {:id "90ddd38a-0ab1-4e44-bcbf-699fc51d7381"
@@ -52,6 +53,7 @@
       {:airport "SFO", :airportJapanese "サンフランシスコ", :dateTime "13:14"}}]
     :price "￥166,500"
     :tax "￥17,320"
+    :amount "￥183,820"
     :time "18時間 24分"
     :milage "7904マイル"}
    {:id "9f06f070-d434-4a20-bfec-05a71902ad4f"
@@ -71,6 +73,7 @@
       {:airport "SFO", :airportJapanese "サンフランシスコ", :dateTime "15:30"}}]
     :price "￥199,000"
     :tax "￥17,320"
+    :amount "￥216,320"
     :time "13時間 45分"
     :milage "5797マイル"}])
 
@@ -120,7 +123,8 @@
         _ (println params) ;; log
         flights (->> EXAMPLE_FLIGHTS
                      (filter #(= (:id %) flightId))
-                     (map #(assoc % :date dateDepart)))]
+                     (map #(assoc % :date dateDepart))
+                     (map #(assoc % :selectable false)))]
     (layer/post-message layer conversation-id {:mime_type "application/x.card.flight.ticket.list+json"
                                                :body (json/write-str
                                                       {:title ""
@@ -130,7 +134,7 @@
     "OK"))
 (defmethod custome-behavier "airline/seats" [params {:keys [layer yelp token-manager
                                                             conversation-id] :as opts}]
-  (let [{:keys [flight-id]} params
+  (let [{:keys [flightId]} params
         _ (println params) ;; log
         seats []]
     (layer/post-message layer conversation-id {:mime_type "application/x.card.flight.seat+json"
@@ -142,12 +146,15 @@
     "OK"))
 (defmethod custome-behavier "airline/purchase" [params {:keys [layer yelp token-manager
                                                                conversation-id] :as opts}]
-  (let [{:keys []} params
+  (let [{:keys [flightId dateDepart]} params
         _ (println params) ;; log
-        order {:price "￥98,000"
-               :tax "￥0"
-               :amount "￥98,000"
-               :date "12/30(月)"
+        flight (->> EXAMPLE_FLIGHTS
+                    (filter #(= (:id %) flightId))
+                    first)
+        order {:price (:price flight)
+               :tax (:tax flight)
+               :amount (:amount flight)
+               :date dateDepart
                :confirmed false}]
     (layer/post-message layer conversation-id {:mime_type "application/x.card.flight.ticket.purchase+json"
                                                :body (json/write-str
