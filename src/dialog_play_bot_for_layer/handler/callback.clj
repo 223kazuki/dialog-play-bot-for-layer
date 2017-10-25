@@ -155,8 +155,8 @@
                                                           (json/read-str m :key-fn keyword)
                                                           (:seats m)
                                                           (map :name m)
-                                                          (str/join m ","))
-                  "application/x.card.flight.ticket.purchase+json" ""
+                                                          (str/join "," m))
+                  "application/x.card.flight.ticket.purchase+json" "DONE"
                   message)
         _ (println message)
         dialog-play-messages (dialog-play/post-message dialog-play message channel-uuid)]
