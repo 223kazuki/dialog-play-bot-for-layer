@@ -116,10 +116,10 @@
     "OK"))
 (defmethod custome-behavier "airline/confirm" [params {:keys [layer yelp token-manager
                                                               conversation-id] :as opts}]
-  (let [{:keys [flight-id dateDepart]} params
+  (let [{:keys [flightId dateDepart]} params
         _ (println params) ;; log
         flights (->> EXAMPLE_FLIGHTS
-                     (filter #(= (:id %) flight-id))
+                     (filter #(= (:id %) flightId))
                      (map #(assoc % :date dateDepart)))]
     (layer/post-message layer conversation-id {:mime_type "application/x.card.flight.ticket.list+json"
                                                :body (json/write-str
