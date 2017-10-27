@@ -176,6 +176,13 @@
                                                        :selection_mode "none"
                                                        :doc doc})})
     "OK"))
+(defmethod custome-behavier "profile/input" [params {:keys [layer yelp token-manager
+                                                            conversation-id] :as opts}]
+  (let [{:keys []} params]
+    (layer/post-message layer conversation-id {:mime_type "application/x.card.text-profile+json"
+                                               :body (json/write-str
+                                                      {})})
+    "OK"))
 (defmethod custome-behavier :default [params opts] "OK")
 
 (defn dialog-play-to-layer
@@ -198,6 +205,7 @@
                                                           (map :name m)
                                                           (str/join "," m))
                   "application/x.card.flight.ticket.purchase+json" "購入完了"
+                  "application/x.card-response+json" "情報入力完了"
                   message)
         _ (println message)
         dialog-play-messages (dialog-play/post-message dialog-play message channel-uuid)]
