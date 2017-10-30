@@ -226,9 +226,10 @@
                                                           (map :name m)
                                                           (str/join "," m))
                   "application/x.card.flight.ticket.purchase+json" "購入完了"
-                  "application/x.card-response+json" (some-> message
-                                                             (json/read-str :key-fn keyword)
-                                                             :data)
+                  "application/x.card-response+json" (or (some-> message
+                                                                 (json/read-str :key-fn keyword)
+                                                                 :data)
+                                                         "確認完了")
                   message)
         _ (println "parsed message: " message)
         dialog-play-messages (dialog-play/post-message dialog-play message channel-uuid)]
