@@ -196,7 +196,7 @@
                  (map #(assoc {} :name (first %) :value (second %)) m))
         _ (println parsed) ;; log
         data {:title "フライト予約内容"
-              :data parsed}]
+              :contents parsed}]
     (layer/post-message layer conversation-id {:mime_type "application/x.card.confirmation+json"
                                                :body (json/write-str
                                                       {:title ""
