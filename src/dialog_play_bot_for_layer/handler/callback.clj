@@ -235,24 +235,26 @@
     (when dialog-play-messages
       (doall
        (for [message dialog-play-messages]
-         (cond
-           (str/starts-with? message CUSTOM_RESPONSE_PREFIX)
-           (as-> message m
-             (str/split m CUSTOM_RESPONSE_PREFIX_REGEX)
-             (rest m)
-             (apply str m)
-             (json/read-str m :key-fn keyword)
-             (custome-behavier m (assoc opts :conversation-id conversation-id)))
+         (do
+           (println "Dialog Play response: " message)
+           (cond
+             (str/starts-with? message CUSTOM_RESPONSE_PREFIX)
+             (as-> message m
+               (str/split m CUSTOM_RESPONSE_PREFIX_REGEX)
+               (rest m)
+               (apply str m)
+               (json/read-str m :key-fn keyword)
+               (custome-behavier m (assoc opts :conversation-id conversation-id)))
 
-           (str/starts-with? message CONFIRMATION_RESPONSE_PREFIX)
-           (as-> message m
-             (assoc {} :type "confirmation" :message m)
-             (custome-behavier m (assoc opts :conversation-id conversation-id)))
+             (str/starts-with? message CONFIRMATION_RESPONSE_PREFIX)
+             (as-> message m
+               (assoc {} :type "confirmation" :message m)
+               (custome-behavier m (assoc opts :conversation-id conversation-id)))
 
-           :else
-           (let [result (layer/post-message layer conversation-id {:mime_type "text/plain"
-                                                                   :body message})]
-             "OK")))))))
+             :else
+             (let [result (layer/post-message layer conversation-id {:mime_type "text/plain"
+                                                                     :body message})]
+               "OK"))))))))
 
 (defmulti  handle-webhook (fn [req opts] (get-in req [:headers "layer-webhook-event-type"])))
 (defmethod handle-webhook "Message.created" [req {:keys [dialog-play layer token-manager sync] :as opts}]
