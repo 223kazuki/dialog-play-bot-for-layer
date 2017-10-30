@@ -16,6 +16,8 @@
 (def DATE_FORMATTER (f/formatter "yyyy/MM/dd HH:mm:ss"))
 (def CUSTOM_RESPONSE_PREFIX "CUSTOM_RESPONSE: ")
 (def CUSTOM_RESPONSE_PREFIX_REGEX (re-pattern CUSTOM_RESPONSE_PREFIX))
+(def CONFIRMATION_RESPONSE_PREFIX "以下の内容でよろしいですか?")
+(def CONFIRMATION_RESPONSE_PREFIX_REGEX (re-pattern CONFIRMATION_RESPONSE_PREFIX))
 
 (def EXAMPLE_FLIGHTS
   [{:id "9b8810c8-18e8-4c8f-99ce-2a96915a21ab"
@@ -183,6 +185,25 @@
                                                :body (json/write-str
                                                       {})})
     "OK"))
+(defmethod custome-behavier "airline/confirmation" [params {:keys [layer yelp token-manager
+                                                                   conversation-id] :as opts}]
+  (let [{:keys [message]} params
+        _ (println params) ;; log
+        parsed (as-> message m
+                 (str/split m #"\n")
+                 (rest m)
+                 (map #(str/split % #":") m)
+                 (map #(assoc {} :name (first %) :value (second %)) m))
+        _ (println parsed) ;; log
+        data {:title "フライト予約内容"
+              :data parsed}]
+    (layer/post-message layer conversation-id {:mime_type "application/x.card.confirmation+json"
+                                               :body (json/write-str
+                                                      {:title ""
+                                                       :subtitle ""
+                                                       :selection_mode "none"
+                                                       :data data})})
+    "OK"))
 (defmethod custome-behavier :default [params opts] "OK")
 
 (defn dialog-play-to-layer
@@ -191,8 +212,8 @@
                          (let [uuid (dialog-play/create-channel dialog-play)]
                            (token-manager/new-conversation token-manager conversation-id uuid)
                            uuid))
-        _ (println message)
-        _ (println mime-type)
+        _ (println "raw message: " message)
+        _ (println "mime-type: " mime-type)
         message (case mime-type
                   "application/x.card.flight.ticket.list+json" (-> message
                                                                    (json/read-str :key-fn keyword)
@@ -205,20 +226,30 @@
                                                           (map :name m)
                                                           (str/join "," m))
                   "application/x.card.flight.ticket.purchase+json" "購入完了"
-                  "application/x.card-response+json" "情報入力完了"
+                  "application/x.card-response+json" (some-> message
+                                                             (json/read-json :key-fn keyword)
+                                                             :data)
                   message)
-        _ (println message)
+        _ (println "parsed message: " message)
         dialog-play-messages (dialog-play/post-message dialog-play message channel-uuid)]
     (when dialog-play-messages
       (doall
        (for [message dialog-play-messages]
-         (if (str/starts-with? message CUSTOM_RESPONSE_PREFIX)
+         (cond
+           (str/starts-with? message CUSTOM_RESPONSE_PREFIX)
            (as-> message m
              (str/split m CUSTOM_RESPONSE_PREFIX_REGEX)
              (rest m)
              (apply str m)
              (json/read-str m :key-fn keyword)
              (custome-behavier m (assoc opts :conversation-id conversation-id)))
+
+           (str/starts-with? message CONFIRMATION_RESPONSE_PREFIX)
+           (as-> message m
+             (assoc {} :type "confirmation" :message m)
+             (custome-behavier m (assoc opts :conversation-id conversation-id)))
+
+           :else
            (let [result (layer/post-message layer conversation-id {:mime_type "text/plain"
                                                                    :body message})]
              "OK")))))))
