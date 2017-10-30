@@ -227,7 +227,7 @@
                                                           (str/join "," m))
                   "application/x.card.flight.ticket.purchase+json" "購入完了"
                   "application/x.card-response+json" (some-> message
-                                                             (json/read-json :key-fn keyword)
+                                                             (json/read-str :key-fn keyword)
                                                              :data)
                   message)
         _ (println "parsed message: " message)
