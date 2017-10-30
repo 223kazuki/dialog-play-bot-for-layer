@@ -248,7 +248,7 @@
 
              (str/starts-with? message CONFIRMATION_RESPONSE_PREFIX)
              (as-> message m
-               (assoc {} :type "confirmation" :message m)
+               (assoc {} :type "airline/confirmation" :message m)
                (custome-behavier m (assoc opts :conversation-id conversation-id)))
 
              :else
