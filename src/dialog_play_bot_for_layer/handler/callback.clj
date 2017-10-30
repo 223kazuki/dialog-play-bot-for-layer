@@ -16,8 +16,7 @@
 (def DATE_FORMATTER (f/formatter "yyyy/MM/dd HH:mm:ss"))
 (def CUSTOM_RESPONSE_PREFIX "CUSTOM_RESPONSE: ")
 (def CUSTOM_RESPONSE_PREFIX_REGEX (re-pattern CUSTOM_RESPONSE_PREFIX))
-(def CONFIRMATION_RESPONSE_PREFIX "以下の内容でよろしいですか?")
-(def CONFIRMATION_RESPONSE_PREFIX_REGEX (re-pattern CONFIRMATION_RESPONSE_PREFIX))
+(def CONFIRMATION_RESPONSE_PREFIX "以下の内容でよろしいですか?\n国内線")
 
 (def EXAMPLE_FLIGHTS
   [{:id "9b8810c8-18e8-4c8f-99ce-2a96915a21ab"
@@ -247,7 +246,7 @@
                (json/read-str m :key-fn keyword)
                (custome-behavier m (assoc opts :conversation-id conversation-id)))
 
-             (str/starts-with? message CONFIRMATION_RESPONSE_PREFIX)
+             (and (str/starts-with? message CONFIRMATION_RESPONSE_PREFIX))
              (as-> message m
                (assoc {} :type "airline/confirmation" :message m)
                (custome-behavier m (assoc opts :conversation-id conversation-id)))
