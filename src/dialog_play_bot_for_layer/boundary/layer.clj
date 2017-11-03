@@ -22,7 +22,8 @@
                         :body (json/write-str {:participants (map #(str "layer:///identities/" %) user-ids)
                                                :distinct false
                                                :metadata {:conversationName "TestTest"
-                                                          :background_color "#3c3c3c"}})})
+                                                          :background_color "#3c3c3c"}
+                                               :throw-exceptions false})})
           conversation-id
           (-> body
               (json/read-str :key-fn keyword)
