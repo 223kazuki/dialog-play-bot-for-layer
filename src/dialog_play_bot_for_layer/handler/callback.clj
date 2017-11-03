@@ -270,15 +270,13 @@
                                     (get-in [:message :conversation :id])
                                     (str/split #"/")
                                     last)
-            sender-id (some-> body
-                              (get-in [:message :sender :id])
-                              (str/split #"/")
-                              last)]
+            sender-id (get-in body [:message :sender :id])]
         (println "Message created: " conversation-id sender-id message mime-type)
-        (when (not= sender-id (layer/get-bot-user-id layer))
-          (if sync
-            (dialog-play-to-layer opts conversation-id mime-type message)
-            (letfn [(f [] (dialog-play-to-layer opts conversation-id mime-type message))]
+        (if (= sender-id (layer/get-bot-user-id layer))
+          (println "Message from myself.")
+          (letfn [(f [] (dialog-play-to-layer opts conversation-id mime-type message))]
+            (if sync
+              (f)
               (.start (Thread. f)))))))))
 (defmethod handle-webhook "Conversation.created" [req {:keys [dialog-play layer token-manager sync] :as opts}]
   (let [{:keys [body params]} req]

@@ -12,7 +12,8 @@
 
 (defrecord Layer [url app-id api-token bot-user-id]
   ILayer
-  (get-bot-user-id [this] bot-user-id)
+  (get-bot-user-id [this]
+    (str "layer:///identities/" bot-user-id))
   (create-conversation [this user-ids]
     (let [{:keys [status body]}
           (client/post (str url "/apps/" app-id "/conversations")
@@ -38,7 +39,7 @@
                        {:content-type :json
                         :headers {"Accept" "application/vnd.layer+json; version=2.0"
                                   "Authorization" (str "Bearer " api-token)}
-                        :body (json/write-str {:sender_id (str "layer:///identities/" bot-user-id)
+                        :body (json/write-str {:sender_id (get-bot-user-id this)
                                                :parts [{:body body
                                                         :mime_type (or mime_type
                                                                        "text/plain")}]})})]
