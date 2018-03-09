@@ -17,6 +17,7 @@
 (def DATE_FORMATTER (f/formatter "yyyy/MM/dd HH:mm:ss"))
 (def CUSTOM_RESPONSE_PREFIX "CUSTOM_RESPONSE: ")
 (def CUSTOM_RESPONSE_PREFIX_REGEX (re-pattern CUSTOM_RESPONSE_PREFIX))
+(def OK "OK")
 
 ;; Custom handler for dialog play response.
 (defmulti custome-behavier :type)
@@ -26,8 +27,20 @@
         _ (info params)]
     (layer/post-message layer conversation-id {:mime_type "application/x.card.text-poll+json"
                                                :body (json/write-str body)})
-    "OK"))
-(defmethod custome-behavier :default [params opts] "OK")
+    OK))
+(defmethod custome-behavier "carousel/finance" [params {:keys [layer token-manager
+                                                               conversation-id] :as opts}]
+  (layer/post-message layer conversation-id {:mime_type "application/x.card.carousel+json"
+                                             :body "{\"title\":\"\",\"subtitle\":\"\",\"selection_mode\":\"none\",\"items\":[{\"title\":\"WTI Crude\",\"detail\":\"Oil has been down in the last month and is expected to go up to $100 per barrel soon.\",\"image_url\":\"/finance/oil.png\"},{\"title\":\"Sugar\",\"detail\":\"Sugar is expected to rise as backlash against HFCS and artificial sweeteners intensifies.\",\"image_url\":\"/finance/sugar.png\"},{\"title\":\"Real Estate\",\"detail\":\"Real estate is poised for a rebound and Fidelity has the best performing RE fund.\",\"image_url\":\"/finance/reip.png\"},{\"title\":\"Donate\",\"detail\":\"Pay it forward by contributing to the national 'Kids who don't read good' fund\",\"image_url\":\"/finance/read.jpg\"}]}"})
+  OK)
+(defmethod custome-behavier "scheduling" [params {:keys [layer token-manager
+                                                         conversation-id] :as opts}]
+  (let [{:keys [body]} params
+        _ (info params)]
+    (layer/post-message layer conversation-id {:mime_type "application/x.card.scheduling+json"
+                                               :body (json/write-str body)})
+    OK))
+(defmethod custome-behavier :default [params opts] OK)
 
 (defn dialog-play-to-layer
   [{:keys [dialog-play layer token-manager] :as opts} conversation-id mime-type message]
@@ -66,7 +79,7 @@
              :else
              (let [result (layer/post-message layer conversation-id {:mime_type "text/plain"
                                                                      :body message})]
-               "OK"))))))))
+               OK))))))))
 
 (defmulti  handle-webhook (fn [req opts] (get-in req [:headers "layer-webhook-event-type"])))
 (defmethod handle-webhook "Message.created" [req {:keys [dialog-play layer token-manager sync] :as opts}]
@@ -109,4 +122,4 @@
 (defmethod ig/init-key :dialog-play-bot-for-layer.handler/callback [_ opts]
   (fn [{[] :ataraxy/result :as req}]
     (handle-webhook req opts)
-    [::response/ok "OK"]))
+    [::response/ok OK]))
