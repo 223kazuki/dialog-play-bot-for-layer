@@ -29,6 +29,8 @@
     "OK"))
 (defmethod custome-behavier :default [params opts] "OK")
 
+
+
 (defn dialog-play-to-layer
   [{:keys [dialog-play layer token-manager] :as opts} conversation-id mime-type message]
   (let [channel-uuid (or (token-manager/get-dialog-play-channel-id token-manager conversation-id)
@@ -37,10 +39,18 @@
                            uuid))
         _ (info "raw message: " message)
         _ (info "mime-type: " mime-type)
-        message (case mime-type
-                  message)
+        message (cond
+                  (= mime-type "text/plain") message
+
+                  (str/starts-with? mime-type "application/x.card-response.1+json")
+                  (some-> message
+                          (json/read-str message :key-fn keyword)
+                          :value
+                          str)
+
+                  :else nil)
         _ (info "parsed message: " message)
-        dialog-play-messages (dialog-play/post-message dialog-play message channel-uuid)]
+        dialog-play-messages (when message (dialog-play/post-message dialog-play message channel-uuid))]
     (when dialog-play-messages
       (doall
        (for [message dialog-play-messages]
