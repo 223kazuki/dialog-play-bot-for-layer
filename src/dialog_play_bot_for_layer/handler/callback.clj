@@ -42,7 +42,7 @@
 
                   (str/starts-with? mime-type "application/x.card-response.1+json")
                   (some-> message
-                          (json/read-str message :key-fn keyword)
+                          (json/read-str :key-fn keyword)
                           :value
                           str)
 
