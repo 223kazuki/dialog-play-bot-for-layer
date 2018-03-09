@@ -3,6 +3,9 @@
             [ataraxy.response :as response]
             [integrant.core :as ig]))
 
+(defmethod ig/init-key :dialog-play-bot-for-layer.handler/ping [_ options]
+  (fn [_] [::response/ok "PONG"]))
+
 (defmethod ig/init-key :dialog-play-bot-for-layer.handler/verify [_ options]
   (fn [{[] :ataraxy/result :as req}]
     (let [{:keys [verification_challenge]} (:params req)]

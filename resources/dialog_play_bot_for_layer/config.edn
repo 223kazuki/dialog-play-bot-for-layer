@@ -11,11 +11,12 @@
  :duct.middleware.web/defaults {:security {:anti-forgery false}}
 
  :duct.module/ataraxy
- {[:get  "/webhook"] [:verify]
+ {[:get  "/ping"] [:ping]
+  [:get  "/webhook"] [:verify]
   [:post "/webhook"] [:callback]}
 
- :dialog-play-bot-for-layer.handler/verify
- {}
+ :dialog-play-bot-for-layer.handler/ping {}
+ :dialog-play-bot-for-layer.handler/verify {}
  :dialog-play-bot-for-layer.handler/callback
  {:dialog-play #ig/ref :dialog-play-bot-for-layer.boundary/dialog-play
   :layer #ig/ref :dialog-play-bot-for-layer.boundary/layer
@@ -28,6 +29,4 @@
  {:url "https://api.layer.com"}
  :dialog-play-bot-for-layer.boundary/yelp
  {:url "https://api.yelp.com"}
- :dialog-play-bot-for-layer.component/token-manager
- {}
- }
+ :dialog-play-bot-for-layer.component/token-manager {}}
