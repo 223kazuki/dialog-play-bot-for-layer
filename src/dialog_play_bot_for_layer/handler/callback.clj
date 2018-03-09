@@ -20,6 +20,15 @@
 
 ;; Custom handler for dialog play response.
 (defmulti custome-behavier :type)
+(defmethod custome-behavier "poll" [params {:keys [layer token-manager
+                                                   conversation-id] :as opts}]
+  (let [{:keys [body]} params
+        _ (info params) ;; log
+        body (json/read-str body :key-fn keyword)
+        _ (info body)]
+    (layer/post-message layer conversation-id {:mime_type "application/x.card.text-poll+json"
+                                               :body (json/write-str body)})
+    "OK"))
 (defmethod custome-behavier :default [params opts] "OK")
 
 (defn dialog-play-to-layer
