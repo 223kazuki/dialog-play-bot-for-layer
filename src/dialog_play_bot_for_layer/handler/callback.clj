@@ -29,8 +29,6 @@
     "OK"))
 (defmethod custome-behavier :default [params opts] "OK")
 
-
-
 (defn dialog-play-to-layer
   [{:keys [dialog-play layer token-manager] :as opts} conversation-id mime-type message]
   (let [channel-uuid (or (token-manager/get-dialog-play-channel-id token-manager conversation-id)
