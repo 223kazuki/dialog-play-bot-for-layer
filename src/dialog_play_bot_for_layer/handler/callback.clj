@@ -81,6 +81,8 @@
                               (str/split #"/")
                               last)]
         (info "Message created: " conversation-id sender-id message mime-type)
+        (info (layer/get-bot-user-id layer))
+        (info (not= sender-id (layer/get-bot-user-id layer)))
         (when (not= sender-id (layer/get-bot-user-id layer))
           (if sync
             (dialog-play-to-layer opts conversation-id mime-type message)
